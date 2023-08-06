@@ -1,58 +1,71 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
-  </div>
+  <v-container fill-height fluid class="black-background">
+    <v-layout align-center justify-center class="flex-column">
+      <v-row align="center" justify="center">
+        <v-col cols="auto">
+          <v-img src="../assets/logo.png"></v-img>
+        </v-col>
+      </v-row>
+      <v-btn @click="gerarCodigo" color="white" light>Gerar Código</v-btn>
+      <v-card v-if="codigoGerado" class="my-card">
+        <v-card-text>
+          Código de acesso: {{ codigoGerado }} <br />Criado em: {{ dataCriacao
+          }}<br />Expira em: {{ dataExpiracao }}
+        </v-card-text>
+      </v-card>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
-  }
-}
+  data() {
+    return {
+      codigoGerado: null,
+      dataCriacao: null,
+      dataExpiracao: null,
+      codigos: [],
+      ativo: true,
+    };
+  },
+  created() {
+    // Carregar os códigos do Firebase na inicialização do componente
+    this.carregarCodigos();
+  },
+  methods: {
+    gerarCodigo() {
+      // Gerar código de 6 dígitos
+      const codigo = Math.floor(100000 + Math.random() * 900000).toString();
+
+      // Definir a data de criação
+      const dataCriacao = new Date().toLocaleDateString();
+
+      // Calcular a data de expiração (1 mês após a criação)
+      const dataExpiracao = new Date();
+      dataExpiracao.setMonth(dataExpiracao.getMonth() + 1);
+      const dataExpiracaoFormatada = dataExpiracao.toLocaleDateString();
+
+      // Atualizar o estado do componente para exibir o código gerado
+      this.codigoGerado = codigo;
+      this.dataCriacao = dataCriacao;
+      this.dataExpiracao = dataExpiracaoFormatada;
+    },
+    carregarCodigos() {},
+    isExpirado(dataExpiracao) {
+      const dataExpiracaoTimestamp = new Date(dataExpiracao).getTime();
+      const hojeTimestamp = new Date().getTime();
+      return hojeTimestamp > dataExpiracaoTimestamp;
+    },
+  },
+};
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
+<style>
+.expired-card {
+  background-color: #ffdddd;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+
+.black-background {
+  background-color: #000000 !important;
 }
 </style>
