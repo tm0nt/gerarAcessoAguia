@@ -7,7 +7,11 @@
         </v-col>
       </v-row>
       <v-btn @click="gerarCodigo" color="white" light>Gerar Código</v-btn>
-      <v-card v-for="(codigo, index) in codigos" :key="index" class="my-card">
+      <v-card
+        v-for="(codigo, index) in codigos"
+        :key="index"
+        class="my-card mt-2"
+      >
         <v-card-text
           :class="{ 'expired-card': isExpirado(codigo.dataExpiracao) }"
         >
