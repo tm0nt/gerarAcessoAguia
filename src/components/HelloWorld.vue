@@ -18,8 +18,11 @@
     </v-layout>
   </v-container>
 </template>
++-
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -30,6 +33,7 @@ export default {
       ativo: true,
       maxCodigos: 5, // Limite de códigos armazenados
       duracaoBalao: 20000, // Tempo de duração do balão em milissegundos (20 segundos)
+      apiUrl: "http://20.226.127.82:3000/gerar-codigo", // URL da API para gerar o código
     };
   },
   created() {
@@ -37,39 +41,43 @@ export default {
     this.carregarCodigos();
   },
   methods: {
-    gerarCodigo() {
-      // Gerar código de 6 dígitos
-      const codigo = Math.floor(100000 + Math.random() * 900000).toString();
+    async gerarCodigo() {
+      try {
+        const response = await axios.post(this.apiUrl);
+        const codigo = response.data.code;
 
-      // Definir a data de criação
-      const dataCriacao = new Date().toLocaleDateString();
+        // Definir a data de criação
+        const dataCriacao = new Date().toLocaleDateString();
 
-      // Calcular a data de expiração (20 segundos após a criação)
-      const dataExpiracao = new Date(
-        Date.now() + this.duracaoBalao
-      ).toLocaleString();
+        // Calcular a data de expiração (20 segundos após a criação)
+        const dataExpiracao = new Date(
+          Date.now() + this.duracaoBalao
+        ).toLocaleString();
 
-      // Atualizar o estado do componente para exibir o código gerado
-      this.codigoGerado = codigo;
-      this.dataCriacao = dataCriacao;
-      this.dataExpiracao = dataExpiracao;
+        // Atualizar o estado do componente para exibir o código gerado
+        this.codigoGerado = codigo;
+        this.dataCriacao = dataCriacao;
+        this.dataExpiracao = dataExpiracao;
 
-      // Adicionar o código gerado ao array de códigos
-      this.codigos.unshift({
-        codigoGerado: this.codigoGerado,
-        dataCriacao: this.dataCriacao,
-        dataExpiracao: this.dataExpiracao,
-      });
+        // Adicionar o código gerado ao array de códigos
+        this.codigos.unshift({
+          codigoGerado: this.codigoGerado,
+          dataCriacao: this.dataCriacao,
+          dataExpiracao: this.dataExpiracao,
+        });
 
-      // Limitar a quantidade de códigos armazenados ao valor máximo definido
-      if (this.codigos.length > this.maxCodigos) {
-        this.codigos.pop();
+        // Limitar a quantidade de códigos armazenados ao valor máximo definido
+        if (this.codigos.length > this.maxCodigos) {
+          this.codigos.pop();
+        }
+
+        // Limpar o código gerado após o intervalo de tempo definido (20 segundos)
+        setTimeout(() => {
+          this.removerCodigo(codigo);
+        }, this.duracaoBalao);
+      } catch (error) {
+        console.error("Erro ao gerar o código:", error);
       }
-
-      // Limpar o código gerado após o intervalo de tempo definido (20 segundos)
-      setTimeout(() => {
-        this.removerCodigo(codigo);
-      }, this.duracaoBalao);
     },
     carregarCodigos() {
       // Simulação do carregamento de códigos do Firebase
