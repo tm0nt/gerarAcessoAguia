@@ -7,10 +7,12 @@
         </v-col>
       </v-row>
       <v-btn @click="gerarCodigo" color="white" light>Gerar Código</v-btn>
-      <v-card v-if="codigoGerado" class="my-card">
-        <v-card-text>
-          Código de acesso: {{ codigoGerado }} <br />Criado em: {{ dataCriacao
-          }}<br />Expira em: {{ dataExpiracao }}
+      <v-card v-for="(codigo, index) in codigos" :key="index" class="my-card">
+        <v-card-text
+          :class="{ 'expired-card': isExpirado(codigo.dataExpiracao) }"
+        >
+          Código de acesso: {{ codigo.codigoGerado }} <br />Criado em:
+          {{ codigo.dataCriacao }} <br />Expira em: {{ codigo.dataExpiracao }}
         </v-card-text>
       </v-card>
     </v-layout>
@@ -26,6 +28,7 @@ export default {
       dataExpiracao: null,
       codigos: [],
       ativo: true,
+      maxCodigos: 5, // Limite de códigos armazenados
     };
   },
   created() {
@@ -49,8 +52,23 @@ export default {
       this.codigoGerado = codigo;
       this.dataCriacao = dataCriacao;
       this.dataExpiracao = dataExpiracaoFormatada;
+
+      // Adicionar o código gerado ao array de códigos
+      this.codigos.unshift({
+        codigoGerado: this.codigoGerado,
+        dataCriacao: this.dataCriacao,
+        dataExpiracao: this.dataExpiracao,
+      });
+
+      // Limitar a quantidade de códigos armazenados ao valor máximo definido
+      if (this.codigos.length > this.maxCodigos) {
+        this.codigos.pop();
+      }
     },
-    carregarCodigos() {},
+    carregarCodigos() {
+      // Simulação do carregamento de códigos do Firebase
+      // Aqui você pode realizar a lógica para carregar os códigos armazenados previamente no banco de dados
+    },
     isExpirado(dataExpiracao) {
       const dataExpiracaoTimestamp = new Date(dataExpiracao).getTime();
       const hojeTimestamp = new Date().getTime();
