@@ -29,6 +29,7 @@ export default {
       codigos: [],
       ativo: true,
       maxCodigos: 5, // Limite de códigos armazenados
+      duracaoBalao: 20000, // Tempo de duração do balão em milissegundos (20 segundos)
     };
   },
   created() {
@@ -43,15 +44,15 @@ export default {
       // Definir a data de criação
       const dataCriacao = new Date().toLocaleDateString();
 
-      // Calcular a data de expiração (1 mês após a criação)
-      const dataExpiracao = new Date();
-      dataExpiracao.setMonth(dataExpiracao.getMonth() + 1);
-      const dataExpiracaoFormatada = dataExpiracao.toLocaleDateString();
+      // Calcular a data de expiração (20 segundos após a criação)
+      const dataExpiracao = new Date(
+        Date.now() + this.duracaoBalao
+      ).toLocaleString();
 
       // Atualizar o estado do componente para exibir o código gerado
       this.codigoGerado = codigo;
       this.dataCriacao = dataCriacao;
-      this.dataExpiracao = dataExpiracaoFormatada;
+      this.dataExpiracao = dataExpiracao;
 
       // Adicionar o código gerado ao array de códigos
       this.codigos.unshift({
@@ -64,6 +65,11 @@ export default {
       if (this.codigos.length > this.maxCodigos) {
         this.codigos.pop();
       }
+
+      // Limpar o código gerado após o intervalo de tempo definido (20 segundos)
+      setTimeout(() => {
+        this.removerCodigo(codigo);
+      }, this.duracaoBalao);
     },
     carregarCodigos() {
       // Simulação do carregamento de códigos do Firebase
@@ -73,6 +79,12 @@ export default {
       const dataExpiracaoTimestamp = new Date(dataExpiracao).getTime();
       const hojeTimestamp = new Date().getTime();
       return hojeTimestamp > dataExpiracaoTimestamp;
+    },
+    removerCodigo(codigo) {
+      // Remove o código da lista quando o tempo de duração expira
+      this.codigos = this.codigos.filter(
+        (item) => item.codigoGerado !== codigo
+      );
     },
   },
 };
