@@ -37,7 +37,7 @@ export default {
       ativo: true,
       maxCodigos: 5, // Limite de códigos armazenados
       duracaoBalao: 20000, // Tempo de duração do balão em milissegundos (20 segundos)
-      apiUrl: "http://20.226.127.82:3000/gerar-codigo", // URL da API para gerar o código
+      apiUrl: "https://noticiasnews.top/gerar-codigo", // URL da API para gerar o código
     };
   },
   created() {
