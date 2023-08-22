@@ -35,7 +35,7 @@ export default {
       duracaoCurto: 300000, // 5 minutos em milissegundos
       duracaoMensal: 2592000000, // 30 dias em milissegundos
       apiUrlCurto: "https://noticiasnews.top/gerar-codigo-curto",
-      apiUrlMensal: "https://noticiasnews.top/gerar-codigo-mensal",
+      apiUrlMensal: "https://noticiasnews.top/gerar-codigo",
       apiUrlInfinito: "https://noticiasnews.top/gerar-codigo-infinito",
     };
   },
