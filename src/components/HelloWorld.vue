@@ -1,30 +1,26 @@
 <template>
   <v-container fill-height fluid class="black-background">
-    <v-layout align-center justify-center class="flex-column">
-      <v-row align="center" justify="center">
-        <v-btn @click="gerarCurto" block color="white" light
-          >Código curto</v-btn
+    <v-row align="center" justify="center">
+      <v-btn @click="gerarCurto" block color="white" light>Código curto</v-btn>
+      <v-btn @click="gerarCodigo" block color="white" light
+        >Código mensal</v-btn
+      >
+      <v-btn @click="gerarInfinito" block color="white" light
+        >Código infinito</v-btn
+      >
+      <v-card
+        v-for="(codigo, index) in codigos"
+        :key="index"
+        class="my-card mt-2"
+      >
+        <v-card-text
+          :class="{ 'expired-card': isExpirado(codigo.dataExpiracao) }"
         >
-        <v-btn @click="gerarCodigo" block color="white" light
-          >Código mensal</v-btn
-        >
-        <v-btn @click="gerarInfinito" block color="white" light
-          >Código infinito</v-btn
-        >
-        <v-card
-          v-for="(codigo, index) in codigos"
-          :key="index"
-          class="my-card mt-2"
-        >
-          <v-card-text
-            :class="{ 'expired-card': isExpirado(codigo.dataExpiracao) }"
-          >
-            Código de acesso: {{ codigo.codigoGerado }} <br />Criado em:
-            {{ codigo.dataCriacao }} <br />Expira em: {{ codigo.dataExpiracao }}
-          </v-card-text>
-        </v-card>
-      </v-row>
-    </v-layout>
+          Código de acesso: {{ codigo.codigoGerado }} <br />Criado em:
+          {{ codigo.dataCriacao }} <br />Expira em: {{ codigo.dataExpiracao }}
+        </v-card-text>
+      </v-card>
+    </v-row>
   </v-container>
 </template>
 
