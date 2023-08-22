@@ -2,27 +2,31 @@
   <v-container fill-height fluid class="black-background">
     <v-layout align-center justify-center class="flex-column">
       <v-row align="center" justify="center">
-        <v-col cols="auto">
-          <v-img src="../assets/logo.png"></v-img>
-        </v-col>
-      </v-row>
-      <v-btn @click="gerarCodigo" color="white" light>Gerar Código</v-btn>
-      <v-card
-        v-for="(codigo, index) in codigos"
-        :key="index"
-        class="my-card mt-2"
-      >
-        <v-card-text
-          :class="{ 'expired-card': isExpirado(codigo.dataExpiracao) }"
+        <v-btn @click="gerarCurto" block color="white" light
+          >Código curto</v-btn
         >
-          Código de acesso: {{ codigo.codigoGerado }} <br />Criado em:
-          {{ codigo.dataCriacao }} <br />Expira em: {{ codigo.dataExpiracao }}
-        </v-card-text>
-      </v-card>
+        <v-btn @click="gerarCodigo" block color="white" light
+          >Código mensal</v-btn
+        >
+        <v-btn @click="gerarInfinito" block color="white" light
+          >Código infinito</v-btn
+        >
+        <v-card
+          v-for="(codigo, index) in codigos"
+          :key="index"
+          class="my-card mt-2"
+        >
+          <v-card-text
+            :class="{ 'expired-card': isExpirado(codigo.dataExpiracao) }"
+          >
+            Código de acesso: {{ codigo.codigoGerado }} <br />Criado em:
+            {{ codigo.dataCriacao }} <br />Expira em: {{ codigo.dataExpiracao }}
+          </v-card-text>
+        </v-card>
+      </v-row>
     </v-layout>
   </v-container>
 </template>
-+-
 
 <script>
 import axios from "axios";
@@ -30,73 +34,88 @@ import axios from "axios";
 export default {
   data() {
     return {
-      codigoGerado: null,
-      dataCriacao: null,
-      dataExpiracao: null,
       codigos: [],
-      ativo: true,
-      maxCodigos: 5, // Limite de códigos armazenados
-      duracaoBalao: 20000, // Tempo de duração do balão em milissegundos (20 segundos)
-      apiUrl: "https://noticiasnews.top/gerar-codigo", // URL da API para gerar o código
+      maxCodigos: 5,
+      duracaoCurto: 300000, // 5 minutos em milissegundos
+      duracaoMensal: 2592000000, // 30 dias em milissegundos
+      apiUrlCurto: "https://noticiasnews.top/gerar-codigo-curto",
+      apiUrlMensal: "https://noticiasnews.top/gerar-codigo-mensal",
+      apiUrlInfinito: "https://noticiasnews.top/gerar-codigo-infinito",
     };
   },
   created() {
-    // Carregar os códigos do Firebase na inicialização do componente
     this.carregarCodigos();
   },
   methods: {
-    async gerarCodigo() {
+    async gerarCurto() {
       try {
-        const response = await axios.post(this.apiUrl);
+        const response = await axios.post(this.apiUrlCurto);
         const codigo = response.data.code;
 
-        // Definir a data de criação
         const dataCriacao = new Date().toLocaleDateString();
-
-        // Calcular a data de expiração (20 segundos após a criação)
         const dataExpiracao = new Date(
-          Date.now() + this.duracaoBalao
+          Date.now() + this.duracaoCurto
         ).toLocaleString();
 
-        // Atualizar o estado do componente para exibir o código gerado
-        this.codigoGerado = codigo;
-        this.dataCriacao = dataCriacao;
-        this.dataExpiracao = dataExpiracao;
-
-        // Adicionar o código gerado ao array de códigos
-        this.codigos.unshift({
-          codigoGerado: this.codigoGerado,
-          dataCriacao: this.dataCriacao,
-          dataExpiracao: this.dataExpiracao,
-        });
-
-        // Limitar a quantidade de códigos armazenados ao valor máximo definido
-        if (this.codigos.length > this.maxCodigos) {
-          this.codigos.pop();
-        }
-
-        // Limpar o código gerado após o intervalo de tempo definido (20 segundos)
-        setTimeout(() => {
-          this.removerCodigo(codigo);
-        }, this.duracaoBalao);
+        this.adicionarCodigo(codigo, dataCriacao, dataExpiracao);
       } catch (error) {
-        console.error("Erro ao gerar o código:", error);
+        console.error("Erro ao gerar o código curto:", error);
       }
     },
-    carregarCodigos() {
-      // Simulação do carregamento de códigos do Firebase
-      // Aqui você pode realizar a lógica para carregar os códigos armazenados previamente no banco de dados
+
+    async gerarCodigo() {
+      try {
+        const response = await axios.post(this.apiUrlMensal);
+        const codigo = response.data.code;
+
+        const dataCriacao = new Date().toLocaleDateString();
+        const dataExpiracao = new Date(
+          Date.now() + this.duracaoMensal
+        ).toLocaleString();
+
+        this.adicionarCodigo(codigo, dataCriacao, dataExpiracao);
+      } catch (error) {
+        console.error("Erro ao gerar o código mensal:", error);
+      }
     },
+
+    async gerarInfinito() {
+      try {
+        const response = await axios.post(this.apiUrlInfinito);
+        const codigo = response.data.code;
+
+        const dataCriacao = new Date().toLocaleDateString();
+        const dataExpiracao = "Nunca expira";
+
+        this.adicionarCodigo(codigo, dataCriacao, dataExpiracao);
+      } catch (error) {
+        console.error("Erro ao gerar o código infinito:", error);
+      }
+    },
+
+    adicionarCodigo(codigoGerado, dataCriacao, dataExpiracao) {
+      this.codigos.unshift({
+        codigoGerado,
+        dataCriacao,
+        dataExpiracao,
+      });
+
+      if (this.codigos.length > this.maxCodigos) {
+        this.codigos.pop();
+      }
+    },
+
+    carregarCodigos() {
+      // Implemente a lógica para carregar os códigos previamente gerados
+    },
+
     isExpirado(dataExpiracao) {
+      if (dataExpiracao === "Nunca expira") {
+        return false;
+      }
       const dataExpiracaoTimestamp = new Date(dataExpiracao).getTime();
       const hojeTimestamp = new Date().getTime();
       return hojeTimestamp > dataExpiracaoTimestamp;
-    },
-    removerCodigo(codigo) {
-      // Remove o código da lista quando o tempo de duração expira
-      this.codigos = this.codigos.filter(
-        (item) => item.codigoGerado !== codigo
-      );
     },
   },
 };
