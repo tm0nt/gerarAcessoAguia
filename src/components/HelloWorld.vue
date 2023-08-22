@@ -2,9 +2,11 @@
   <v-container fill-height fluid class="black-background">
     <v-row align="center" justify="center">
       <v-btn @click="gerarCurto" block color="white" light>Código curto</v-btn>
+      <v-spacer></v-spacer>
       <v-btn @click="gerarCodigo" block color="white" light
         >Código mensal</v-btn
       >
+      <v-spacer></v-spacer>
       <v-btn @click="gerarInfinito" block color="white" light
         >Código infinito</v-btn
       >
