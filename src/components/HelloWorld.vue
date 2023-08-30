@@ -35,13 +35,12 @@
         <v-card-text>
           <v-list>
             <v-list-item
-              class="mt-n5"
+              class="mt-n2"
               v-for="(codigo, index) in codigos.slice(0, maxCodigos)"
               :key="index"
             >
               {{ codigo.codigoGerado }}, criado em: {{ codigo.dataCriacao }},
               expira em: {{ codigo.dataExpiracao }}
-              <v-divider></v-divider>
             </v-list-item>
           </v-list>
         </v-card-text>
