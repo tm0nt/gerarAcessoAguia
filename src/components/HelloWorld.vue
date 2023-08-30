@@ -37,6 +37,7 @@
         <v-card-text>
           <v-list>
             <v-list-item
+              class="mt-n5"
               v-for="(codigo, index) in codigos.slice(0, maxCodigos)"
               :key="index"
             >
