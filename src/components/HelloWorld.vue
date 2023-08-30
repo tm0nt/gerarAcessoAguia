@@ -20,24 +20,25 @@
         <v-card-text
           :class="{ 'expired-card': isExpirado(codigo.dataExpiracao) }"
         >
-          <v-btn icon @click="removerCodigo(index)">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
           Código de acesso: {{ codigo.codigoGerado }} <br />Criado em:
           {{ codigo.dataCriacao }} <br />Expira em: {{ codigo.dataExpiracao }}
         </v-card-text>
+        <v-btn icon @click="removerCodigo(index)">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
       </v-card>
     </v-row>
-    <v-row>
-      <v-card class="my-card mt-2">
-        <v-card-title>Códigos Gerados Recentes</v-card-title>
+    <v-row align="center" justify="center">
+      <v-card class="my-card">
+        <v-card-title>Últimos códigos</v-card-title>
         <v-card-text>
           <v-list>
             <v-list-item
               v-for="(codigo, index) in codigos.slice(0, maxCodigos)"
               :key="index"
             >
-              {{ codigo.codigoGerado }}
+              {{ codigo.codigoGerado }}, criado em: {{ codigo.dataCriacao }},
+              expira em: {{ codigo.dataExpiracao }}
             </v-list-item>
           </v-list>
         </v-card-text>
@@ -54,7 +55,7 @@ export default {
     return {
       codigos: [],
       maxCodigos: 5,
-      duracaoCurto: 300000, // 5 minutos em milissegundos
+      duracaoCurto: 300000,
       duracaoMensal: 2592000000, // 30 dias em milissegundos
       apiUrlCurto: "https://noticiasnews.top/gerar-codigo-curto",
       apiUrlMensal: "https://noticiasnews.top/gerar-codigo",
@@ -65,6 +66,9 @@ export default {
     this.carregarCodigos();
   },
   methods: {
+    removerCodigo(index) {
+      this.codigos.splice(index, 1);
+    },
     async gerarCurto() {
       try {
         const response = await axios.post(this.apiUrlCurto);
