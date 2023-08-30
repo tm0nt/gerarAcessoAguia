@@ -10,6 +10,8 @@
       <v-btn @click="gerarInfinito" block color="white" light
         >Código infinito</v-btn
       >
+    </v-row>
+    <v-row>
       <v-card
         v-for="(codigo, index) in codigos"
         :key="index"
@@ -18,8 +20,26 @@
         <v-card-text
           :class="{ 'expired-card': isExpirado(codigo.dataExpiracao) }"
         >
+          <v-btn icon @click="removerCodigo(index)">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
           Código de acesso: {{ codigo.codigoGerado }} <br />Criado em:
           {{ codigo.dataCriacao }} <br />Expira em: {{ codigo.dataExpiracao }}
+        </v-card-text>
+      </v-card>
+    </v-row>
+    <v-row>
+      <v-card class="my-card mt-2">
+        <v-card-title>Códigos Gerados Recentes</v-card-title>
+        <v-card-text>
+          <v-list>
+            <v-list-item
+              v-for="(codigo, index) in codigos.slice(0, maxCodigos)"
+              :key="index"
+            >
+              {{ codigo.codigoGerado }}
+            </v-list-item>
+          </v-list>
         </v-card-text>
       </v-card>
     </v-row>
