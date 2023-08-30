@@ -12,8 +12,7 @@
         >Código infinito</v-btn
       >
     </v-row>
-    <v-row>
-      <!-- Loop through codigos to display v-cards -->
+    <v-row align="center" justify="center">
       <v-card
         v-for="(codigo, index) in codigosFiltrados"
         :key="index"
@@ -31,7 +30,6 @@
       </v-card>
     </v-row>
     <v-row align="center" justify="center">
-      <!-- Display last generated codes -->
       <v-card class="my-card" min-width="400">
         <h2 class="mt-2 text-center">Últimos códigos</h2>
         <v-card-text>
