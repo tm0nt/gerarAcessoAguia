@@ -41,8 +41,8 @@
             >
               {{ codigo.codigoGerado }}, criado em: {{ codigo.dataCriacao }},
               expira em: {{ codigo.dataExpiracao }}
+              <v-divider></v-divider>
             </v-list-item>
-            <v-divider></v-divider>
           </v-list>
         </v-card-text>
       </v-card>
