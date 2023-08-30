@@ -33,7 +33,7 @@
     <v-row align="center" justify="center">
       <!-- Display last generated codes -->
       <v-card class="my-card" min-width="400">
-        <v-card-title>Últimos códigos</v-card-title>
+        <h4 class="texxt-center">Últimos códigos</h4>
         <v-card-text>
           <v-list>
             <v-list-item
