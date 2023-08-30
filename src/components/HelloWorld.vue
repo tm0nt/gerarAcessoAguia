@@ -31,7 +31,7 @@
     </v-row>
     <v-row align="center" justify="center">
       <v-card class="my-card" min-width="400">
-        <h2 class="mt-2 text-center">Últimos códigos</h2>
+        <p class="overline mt-2 text-center">Últimos códigos</p>
         <v-card-text>
           <v-list>
             <v-list-item
