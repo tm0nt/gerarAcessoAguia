@@ -1,6 +1,7 @@
 <template>
   <v-container fill-height fluid class="black-background">
     <v-row align="center" justify="center">
+      <!-- Buttons to generate codes -->
       <v-btn @click="gerarCurto" block color="white" light>Código curto</v-btn>
       <v-spacer></v-spacer>
       <v-btn @click="gerarCodigo" block color="white" light
@@ -12,8 +13,9 @@
       >
     </v-row>
     <v-row>
+      <!-- Loop through codigos to display v-cards -->
       <v-card
-        v-for="(codigo, index) in codigos"
+        v-for="(codigo, index) in codigosFiltrados"
         :key="index"
         class="my-card mt-2"
       >
@@ -29,7 +31,8 @@
       </v-card>
     </v-row>
     <v-row align="center" justify="center">
-      <v-card class="my-card">
+      <!-- Display last generated codes -->
+      <v-card class="my-card" min-width="400">
         <v-card-title>Últimos códigos</v-card-title>
         <v-card-text>
           <v-list>
@@ -56,18 +59,23 @@ export default {
       codigos: [],
       maxCodigos: 5,
       duracaoCurto: 300000,
-      duracaoMensal: 2592000000, // 30 dias em milissegundos
+      duracaoMensal: 2592000000, // 30 days in milliseconds
       apiUrlCurto: "https://noticiasnews.top/gerar-codigo-curto",
       apiUrlMensal: "https://noticiasnews.top/gerar-codigo",
       apiUrlInfinito: "https://noticiasnews.top/gerar-codigo-infinito",
     };
+  },
+  computed: {
+    codigosFiltrados() {
+      return this.codigos.filter((codigo) => !codigo.fechado);
+    },
   },
   created() {
     this.carregarCodigos();
   },
   methods: {
     removerCodigo(index) {
-      this.codigos.splice(index, 1);
+      this.codigos[index].fechado = true;
     },
     async gerarCurto() {
       try {
@@ -120,6 +128,7 @@ export default {
         codigoGerado,
         dataCriacao,
         dataExpiracao,
+        fechado: false, // Set as not closed initially
       });
 
       if (this.codigos.length > this.maxCodigos) {
@@ -128,7 +137,7 @@ export default {
     },
 
     carregarCodigos() {
-      // Implemente a lógica para carregar os códigos previamente gerados
+      // Implement the logic to load previously generated codes
     },
 
     isExpirado(dataExpiracao) {
